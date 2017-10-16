@@ -1,11 +1,25 @@
-# continuous-deployment
+# Continuous Deployment
+
 Continuous deployment of code to raspberry pi
 
-Copy sample.config.js and rename to config.js.
+## Getting Started
 
-Update project directory location
+Copy sample.config.js and rename to config.js. Update project directory location within this file to your required destination for the project the node app will be downloading and updating.
 
-based on:
+```
+// path of where the retrieved git repo should be written
+config.projectDir = "~/projects/mycdproject";
+```
 
-https://dzone.com/articles/github-continuous-deployment-to-a-raspberry-pi
-https://raw.githubusercontent.com/DanielEgan/wackcoon-hook
+```
+// path of where the retrieved git repo should be written
+config.projectDir = "~/projects/weatherpi";
+```
+
+
+## Acknowledgments
+
+based on a the following blog post and repo
+
+* [GitHub Continuous Deployment to a Raspberry Pi](https://dzone.com/articles/github-continuous-deployment-to-a-raspberry-pi)
+* [Wackcoon](https://raw.githubusercontent.com/DanielEgan/wackcoon-hook)
