@@ -44,8 +44,12 @@ Make any required changes to the directory path, then save file as config.js.
 
 CTRL-O to write out the file, rename it to config.js.  Select Yes when prompted to 'Save File Under Different Name?'.  CTRL-X to exit nano.
 
-Ensure the directory exists locally!
+Ensure the directory exists locally and clone you git repo into it e.g. 
 
+```
+$ cd ~/projects
+$ git clone https://github.com/username/mycdproject.git
+```
 
 ### Run your app 
 
