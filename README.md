@@ -44,6 +44,8 @@ Make any required changes to the directory path, then save file as config.js.
 
 CTRL-O to write out the file, rename it to config.js.  Select Yes when prompted to 'Save File Under Different Name?'.  CTRL-X to exit nano.
 
+Ensure the directory exists locally!
+
 
 ### Run your app 
 
@@ -94,8 +96,7 @@ Select application/json as the content type
 
 Then click the 'Add Webhook' button at the bottom of the page.
 
-
-
+Now check a change in and see what happens.
 
 ## Acknowledgments
 
