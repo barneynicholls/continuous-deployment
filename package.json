@@ -5,10 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "body-parser": "^1.15.1",
-    "compression": "^1.6.2",
-    "express": "^4.13.4",
-    "node-local-tunnel": "^0.1.5",
-    "q": "^1.4.1"
+    "express": "^4.13.4"  
   },
   "devDependencies": {},
   "scripts": {
