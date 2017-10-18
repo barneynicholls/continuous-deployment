@@ -36,11 +36,8 @@ app.post('/payload', function (req, res) {
 	// now pull down the latest
 	exec('git -C '+config.projectDir+' pull -f', execCallback);
 
-	// and npm install with --production
-	exec('npm -C '+config.projectDir+' install --production', execCallback);
-
-	// and run tsc
-	exec('tsc', execCallback);
+	// and run the startup script
+	exec('python '+config.projectDir+'/'+config.startupScript, execCallback);
 });
 
 app.listen(5000, function () {
