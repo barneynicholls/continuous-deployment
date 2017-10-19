@@ -62,28 +62,6 @@ $ node app.js
 Opening a browser and entering the url http://localhost:5000 should prove the application is running
 
 
-## Make you application available on the internet
-
-Launch a new terminal session and globally install localtunnel
-
-```
-$ sudo npm install -g localtunnel
-```
-
-Then run localtunnel pointing at our app
-
-```
-$ lt -p 5000 -o
-```
-
-You should then be assigned a random url that means your pi is accessible from the web e.g. https://hqvbyiojko.localtunnel.me
-
-You can specify the prefix if you require (and it's available)
-
-```
-$ lt -p 5000 -s mywebprefix -o
-```
-
 ## Attach your webhook 
 
 Go to Settings | Webhooks on your git repository.
@@ -93,7 +71,7 @@ Click the 'Add Webhook' button.
 Enter a Payload URL e.g.
 
 ```
-https://hqvbyiojko.localtunnel.me/payload
+https://mycdproject.localtunnel.me/payload
 ```
 
 Select application/json as the content type
@@ -108,3 +86,5 @@ based on a the following blog post and repo
 
 * [GitHub Continuous Deployment to a Raspberry Pi](https://dzone.com/articles/github-continuous-deployment-to-a-raspberry-pi)
 * [Wackcoon](https://raw.githubusercontent.com/DanielEgan/wackcoon-hook)
+
+Thanks also to [julianfrank](https://github.com/julianfrank) for the localtunnel code example found [here](https://github.com/localtunnel/localtunnel/issues/156)
