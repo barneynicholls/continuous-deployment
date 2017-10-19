@@ -1,9 +1,42 @@
 var config = require('./config');
 
+
+lt=require('localtunnel')
+
+function localTunnel(port, subdomain, local_host) {
+   var  tunnel = lt(port, { subdomain: subdomain, local_host: local_host }, function (err, tunnel) {
+        if (err) {
+            console.error("localTunnelCode Failed with error: " + inspect(err))
+        } else {
+			console.info("localTunnel connected and webhook url should be : " + tunnel.url + "/payload")
+			console.info("to confirm this is running use a browser to visit : " + tunnel.url)
+        }
+	})
+	
+    tunnel.on('close', function () {
+		console.error("tunnel -> Tunnel Closed...Going to Restart")
+        tunnel = lt(port, { subdomain: subdomain }, function (err, tunnel) {
+            if (err) {
+				console.error("localTunnelCode Restart Failed with error: " + inspect(err))
+            } else {
+				console.warn("localTunnelCode Re-Connected and webhook url should be : " + tunnel.url + "/payload")
+            }
+        })
+	})
+	
+    tunnel.on('error', function (err) {
+		console.error("tunnel Error -> " + inspect(err))
+    })
+}
+
+localTunnel(config.port,config.subdomain,'localhost');
+
+
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
 var execSync = require('child_process').execSync;
+
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -19,30 +52,39 @@ app.get('/payload', function (req, res) {
 });
 
 app.post('/payload', function (req, res) {
-	//verify that the payload is a push from the correct repo
-    
+
+	//recommend that you verify the payload is a push from the correct repo
     //verify repository.name == 'expected repo name' or repository.full_name = 'user name/expected repo name'
 
 	console.log(req.body.pusher.name + ' just pushed to ' + req.body.repository.name);
 
-	console.log('pulling code from GitHub...');
-
+	var pullingFromGit = 'pulling code from GitHub: ';
+	
 	// reset any changes that have been made locally
-	execSync('git -C '+config.projectDir+' reset --hard', execCallback);
+	var gitReset = 'git -C '+config.projectDir+' reset --hard';
+	console.log(pullingFromGit+' '+gitReset);
+	execSync(gitReset, execCallback);
 
 	// and ditch any files that have been added locally too
-	execSync('git -C '+config.projectDir+' clean -df', execCallback);
+	var deleteLocal = 'git -C '+config.projectDir+' clean -df';
+	console.log(pullingFromGit+' '+deleteLocal);
+	execSync(deleteLocal, execCallback);
 
 	// now pull down the latest
-	execSync('git -C '+config.projectDir+' pull -f', execCallback);
+	var pull = 'git -C '+config.projectDir+' pull -f';
+	console.log(pullingFromGit+' '+pull);
+	execSync(pull, execCallback);
 
 	// and run the startup script
-	execSync('python3.4 '+config.projectDir+'/'+config.startupScript, execCallback);
+	console.log('execute startup: '+config.startupCommand);
+	execSync(config.startupCommand, execCallback);
+
+	console.log('update complete');
 });
 
-app.listen(5000, function () {
-    console.log('listening on port 5000')
-    console.log(config.projectDir)
+app.listen(config.port, function () {
+    console.log('listening on port '+config.port)
+    console.log('project dir: '+config.projectDir)
 });
 
 function execCallback(err, stdout, stderr) {
