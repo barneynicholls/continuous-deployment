@@ -28,16 +28,16 @@ app.post('/payload', function (req, res) {
 	console.log('pulling code from GitHub...');
 
 	// reset any changes that have been made locally
-	exec('git -C '+config.projectDir+' reset --hard', execCallback);
+	execSync('git -C '+config.projectDir+' reset --hard', execCallback);
 
 	// and ditch any files that have been added locally too
-	exec('git -C '+config.projectDir+' clean -df', execCallback);
+	execSync('git -C '+config.projectDir+' clean -df', execCallback);
 
 	// now pull down the latest
-	exec('git -C '+config.projectDir+' pull -f', execCallback);
+	execSync('git -C '+config.projectDir+' pull -f', execCallback);
 
 	// and run the startup script
-	exec('python3.4 '+config.projectDir+'/'+config.startupScript, execCallback);
+	execSync('python3.4 '+config.projectDir+'/'+config.startupScript, execCallback);
 });
 
 app.listen(5000, function () {
