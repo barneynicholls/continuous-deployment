@@ -37,7 +37,7 @@ app.post('/payload', function (req, res) {
 	exec('git -C '+config.projectDir+' pull -f', execCallback);
 
 	// and run the startup script
-	exec('python '+config.projectDir+'/'+config.startupScript, execCallback);
+	exec('python3.4 '+config.projectDir+'/'+config.startupScript, execCallback);
 });
 
 app.listen(5000, function () {
