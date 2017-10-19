@@ -3,7 +3,7 @@ var config = require('./config');
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
-var exec = require('child_process').exec;
+var execSync = require('child_process').execSync;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
