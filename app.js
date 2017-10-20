@@ -6,7 +6,7 @@ lt=require('localtunnel')
 function localTunnel(port, subdomain, local_host) {
    var  tunnel = lt(port, { subdomain: subdomain, local_host: local_host }, function (err, tunnel) {
         if (err) {
-            console.error("localTunnelCode Failed with error: " + inspect(err))
+            console.error("localTunnelCode Failed with error: " + err)
         } else {
 			console.info("localTunnel connected and webhook url should be : " + tunnel.url + "/payload")
 			console.info("to confirm this is running use a browser to visit : " + tunnel.url)
@@ -17,7 +17,7 @@ function localTunnel(port, subdomain, local_host) {
 		console.error("tunnel -> Tunnel Closed...Going to Restart")
         tunnel = lt(port, { subdomain: subdomain }, function (err, tunnel) {
             if (err) {
-				console.error("localTunnelCode Restart Failed with error: " + inspect(err))
+				console.error("localTunnelCode Restart Failed with error: " + err)
             } else {
 				console.warn("localTunnelCode Re-Connected and webhook url should be : " + tunnel.url + "/payload")
             }
@@ -25,11 +25,13 @@ function localTunnel(port, subdomain, local_host) {
 	})
 	
     tunnel.on('error', function (err) {
-		console.error("tunnel Error -> " + inspect(err))
+		console.error("tunnel Error -> " + err)
     })
 }
 
 localTunnel(config.port,config.subdomain,'localhost');
+
+
 
 
 var express = require('express');
@@ -37,27 +39,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var execSync = require('child_process').execSync;
 
-
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/index.htm');
-	console.log('get /');
-});
-
-app.get('/payload', function (req, res) {
-    res.sendStatus(200);
-	console.log('get /payload');
-});
-
-app.post('/payload', function (req, res) {
-
-	//recommend that you verify the payload is a push from the correct repo
-    //verify repository.name == 'expected repo name' or repository.full_name = 'user name/expected repo name'
-
-	console.log(req.body.pusher.name + ' just pushed to ' + req.body.repository.name);
-
+function gitPull(){
 	var pullingFromGit = 'pulling code from GitHub: ';
 	
 	// reset any changes that have been made locally
@@ -80,6 +62,34 @@ app.post('/payload', function (req, res) {
 	execSync(config.startupCommand, execCallback);
 
 	console.log('update complete');
+}
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+app.get('/', function (req, res) {
+    res.sendFile(__dirname + '/index.htm');
+	console.log('get /');
+});
+
+app.get('/payload', function (req, res) {
+    res.sendStatus(200);
+	console.log('get /payload');
+});
+
+app.post('/payload', function (req, res) {
+	//recommend that you verify the payload is a push from the correct repo
+    //verify repository.name == 'expected repo name' or repository.full_name = 'user name/expected repo name'
+
+	console.log(req.body.pusher.name + ' just pushed to ' + req.body.repository.name);
+
+	gitPull();
+});
+
+app.get('/pull', function (req, res) {
+	console.log('get /pull');
+	gitPull();
+    res.sendStatus(200);
 });
 
 app.listen(config.port, function () {
